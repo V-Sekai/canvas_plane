@@ -17,7 +17,6 @@ func untransform_normal(p_normal: Vector3) -> Vector3:
 
 
 func validate_pointer(p_normal: Vector3) -> bool:
-	var basis: Basis = global_transform.basis.orthonormalized()
 	var transform_normal: Vector3 = untransform_normal(p_normal)
 	if transform_normal.z > 0.0:
 		return true

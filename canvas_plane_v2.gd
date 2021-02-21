@@ -123,8 +123,8 @@ func set_billboard_mode(p_billboard_mode: int) -> void:
 
 
 func _setup_canvas_item() -> void:
-	if control_root.is_connected("resized", self, "_resized") == false:
-		control_root.connect("resized", self, "_resized")
+	if !control_root.is_connected("resized", self, "_resized"):
+		assert(control_root.connect("resized", self, "_resized") == OK)
 	original_canvas_rid = control_root.get_canvas()
 	VisualServer.canvas_item_set_parent(control_root.get_canvas_item(), viewport.find_world_2d().get_canvas())
 
@@ -169,7 +169,7 @@ func _update_control_root() -> void:
 
 func set_dirty_flag() -> void:
 	#print("set_dirty_flag")
-	if _is_dirty == false:
+	if !_is_dirty:
 		_is_dirty = true
 		call_deferred("_update")
 			
@@ -222,10 +222,8 @@ func _ready() -> void:
 	pointer_receiver = function_pointer_receiver_const.new()
 	pointer_receiver.set_name("PointerReceiver")
 
-	if pointer_receiver.connect("pointer_pressed", self, "on_pointer_pressed") != OK:
-		printerr("pointer_pressed could not be connected!")
-	if pointer_receiver.connect("pointer_release", self, "on_pointer_release") != OK:
-		printerr("pointer_release could not be connected!")
+	assert(pointer_receiver.connect("pointer_pressed", self, "on_pointer_pressed") == OK)
+	assert(pointer_receiver.connect("pointer_release", self, "on_pointer_release") == OK)
 
 	pointer_receiver.collision_mask = collision_mask
 	pointer_receiver.collision_layer = collision_layer

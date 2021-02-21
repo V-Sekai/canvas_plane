@@ -247,12 +247,9 @@ func _ready() -> void:
 	pointer_receiver = function_pointer_receiver_const.new()
 	pointer_receiver.set_name("PointerReceiver")
 
-	if pointer_receiver.connect("pointer_pressed", self, "on_pointer_pressed") != OK:
-		printerr("pointer_pressed could not be connected!")
-	if pointer_receiver.connect("pointer_release", self, "on_pointer_release") != OK:
-		printerr("pointer_release could not be connected!")
-	#if pointer_receiver.connect("pointer_moved", self, "on_pointer_moved") != OK:
-	#	printerr("pointer_moved could not be connected!")
+	assert(pointer_receiver.connect("pointer_pressed", self, "on_pointer_pressed") == OK)
+	assert(pointer_receiver.connect("pointer_release", self, "on_pointer_release") == OK)
+	#assert(pointer_receiver.connect("pointer_moved", self, "on_pointer_moved") == OK)
 
 	pointer_receiver.collision_mask = collision_mask
 	pointer_receiver.collision_layer = collision_layer
