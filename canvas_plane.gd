@@ -203,10 +203,13 @@ func _process(_delta: float) -> void:
 
 func _init():
 	spatial_root = Spatial.new()
+	viewport = Viewport.new()
+	control_root = Control.new()
+
+func _setup_viewport() -> void:
 	spatial_root.set_name("SpatialRoot")
 	add_child(spatial_root)
 	
-	viewport = Viewport.new()
 	viewport.size = Vector2(canvas_width, canvas_height)
 	viewport.hdr = false
 	viewport.transparent_bg = true
@@ -219,7 +222,6 @@ func _init():
 	viewport.set_name("Viewport")
 	spatial_root.add_child(viewport)
 
-	control_root = Control.new()
 	control_root.set_name("ControlRoot")
 	control_root.set_anchors_preset(Control.PRESET_WIDE)
 	viewport.add_child(control_root)
@@ -231,12 +233,13 @@ func _init():
 				control_root.add_child(child)
 
 func _ready() -> void:
-
+	_setup_viewport()
+	
 	mesh = PlaneMesh.new()
 
 	mesh_instance = MeshInstance.new()
 	mesh_instance.set_mesh(mesh)
-	mesh_instance.rotate_x(deg2rad(-90))
+	mesh_instance.rotate_x(-PI/2)
 	mesh_instance.set_scale(Vector3(1.0, -1.0, 1.0))
 	mesh_instance.set_name("MeshInstance")
 	mesh_instance.set_skeleton_path(NodePath())
