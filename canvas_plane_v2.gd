@@ -8,6 +8,7 @@ const function_pointer_receiver_const = preload("function_pointer_receiver.gd")
 var _is_dirty: bool = true
 
 export (Vector2) var offset_ratio: Vector2 = Vector2(0.5, 0.5) setget set_offset_ratio
+export (Vector2) var canvas_scale: Vector2 = Vector2(1.0, 1.0) setget set_canvas_scale
 
 enum BillboardMode {BILLBOARD_DISABLED, BILLBOARD_ENABLED, BILLBOARD_FIXED_Y, BILLBOARD_PARTICLES}
 export(BillboardMode) var billboard_mode: int = BillboardMode.BILLBOARD_DISABLED setget set_billboard_mode
@@ -81,7 +82,7 @@ func _update() -> void:
 	))
 
 	if mesh:
-		mesh.set_size(scaled_canvas_size)
+		mesh.set_size(scaled_canvas_size * canvas_scale)
 
 	if mesh_instance:
 		mesh_instance.set_translation(Vector3(canvas_offset.x, canvas_offset.y, 0))
@@ -103,6 +104,9 @@ func set_offset_ratio(p_offset_ratio: Vector2) -> void:
 	offset_ratio = p_offset_ratio
 	set_dirty_flag()
 
+func set_canvas_scale(p_canvas_scale: Vector2) -> void:
+	canvas_scale = p_canvas_scale
+	set_dirty_flag()
 
 func set_interactable(p_interactable: bool) -> void:
 	interactable = p_interactable
