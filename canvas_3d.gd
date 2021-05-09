@@ -1,7 +1,8 @@
 extends Spatial
-class_name CanvasPlaneV2, "icon_canvas_plane.svg"
+class_name Canvas3D, "icon_canvas_3d.svg"
 tool
 
+const canvas_shader_const = preload("canvas_shader.shader")
 const canvas_utils_const = preload("canvas_utils.gd")
 const function_pointer_receiver_const = preload("function_pointer_receiver.gd")
 
@@ -122,7 +123,7 @@ func set_translucent(p_translucent: bool) -> void:
 func set_billboard_mode(p_billboard_mode: int) -> void:
 	billboard_mode = p_billboard_mode
 	if material:
-		material.set_billboard_mode(p_billboard_mode)
+		material.set_shader_param("billboard_mode", billboard_mode)
 	set_dirty_flag()
 
 
@@ -214,7 +215,7 @@ func _ready() -> void:
 
 	mesh_instance = MeshInstance.new()
 	mesh_instance.set_mesh(mesh)
-	mesh_instance.set_scale(Vector3(1.0, -1.0, 1.0))
+	mesh_instance.set_scale(Vector3(1.0, 1.0, 1.0))
 	mesh_instance.set_name("MeshInstance")
 	mesh_instance.set_skeleton_path(NodePath())
 	
@@ -256,11 +257,9 @@ func _ready() -> void:
 	spatial_root.add_child(viewport)
 
 	# Generate the unique material
-	material = SpatialMaterial.new()
-	material.flags_unshaded = true
-	material.flags_transparent = translucent
-	material.flags_albedo_tex_force_srgb = true
-	material.set_billboard_mode(billboard_mode)
+	material = ShaderMaterial.new()
+	material.shader = canvas_shader_const
+	material.set_shader_param("billboard_mode", billboard_mode)
 	
 	_update()
 	_set_mesh_material(material)
@@ -269,7 +268,7 @@ func _ready() -> void:
 	var texture: ViewportTexture = viewport.get_texture()
 	var flags: int = Texture.FLAGS_DEFAULT
 	texture.set_flags(flags)
-	material.albedo_texture = texture
+	material.set_shader_param("texture_albedo", texture)
 
 	if Engine.is_editor_hint():
 		if get_tree().connect("tree_changed", self, "_tree_changed") != OK:

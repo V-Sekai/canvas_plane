@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/icon_canvas_plane.svg-990927e696b5d6fe12b782cf3dbc8550.stex"
+path="res://.import/icon_canvas_3d.svg-db5b055ea07553e8e8831a97445ee1a6.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/canvas_plane/icon_canvas_plane.svg"
-dest_files=[ "res://.import/icon_canvas_plane.svg-990927e696b5d6fe12b782cf3dbc8550.stex" ]
+source_file="res://addons/canvas_plane/icon_canvas_3d.svg"
+dest_files=[ "res://.import/icon_canvas_3d.svg-db5b055ea07553e8e8831a97445ee1a6.stex" ]
 
 [params]
 

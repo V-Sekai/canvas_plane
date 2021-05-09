@@ -3,7 +3,7 @@ class_name Canvas3DAnchor
 tool
 
 const canvas_utils_const = preload("canvas_utils.gd")
-const spatial_canvas_const = preload("canvas_plane_v2.gd")
+const spatial_canvas_const = preload("canvas_3d.gd")
 
 export(NodePath) var canvas_item_node_path: NodePath = NodePath() setget set_canvas_item_node_path
 export(Vector2) var offset_ratio: Vector2 = Vector2(0.5, 0.5)
