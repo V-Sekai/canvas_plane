@@ -1,5 +1,5 @@
 extends Spatial
-class_name CanvasPlane, "icon_canvas_plane.svg"
+class_name CanvasPlane, "icon_canvas_3d.svg"
 tool
 
 const function_pointer_receiver_const = preload("function_pointer_receiver.gd")
@@ -146,7 +146,7 @@ func _set_mesh_material(p_material: Material) -> void:
 			mesh.surface_set_material(0, p_material)
 
 
-func on_pointer_pressed(p_position: Vector3) -> void:
+func on_pointer_pressed(p_position: Vector3, p_doubleclick: bool) -> void:
 	var position_2d: Vector2 = get_spatial_origin_to_canvas_position(p_position)
 
 	# Let's mimic a mouse
@@ -157,6 +157,7 @@ func on_pointer_pressed(p_position: Vector3) -> void:
 	event.set_position(position_2d)
 	event.set_global_position(position_2d)
 	event.set_button_mask(mouse_mask)
+	event.set_doubleclick(p_doubleclick)
 
 	#get_tree().set_input_as_handled()
 	viewport.input(event)

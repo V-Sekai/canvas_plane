@@ -24,8 +24,8 @@ func validate_pointer(p_normal: Vector3) -> bool:
 		return false
 
 
-func on_pointer_pressed(p_position: Vector3) -> void:
-	emit_signal("pointer_pressed", untransform_position(p_position))
+func on_pointer_pressed(p_position: Vector3, p_doubleclick: bool) -> void:
+	emit_signal("pointer_pressed", untransform_position(p_position), p_doubleclick)
 
 
 func on_pointer_moved(p_position: Vector3, p_normal: Vector3) -> void:
