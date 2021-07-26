@@ -1,5 +1,5 @@
+@tool
 extends EditorPlugin
-tool
 
 var editor_interface = null
 
@@ -13,5 +13,5 @@ func _notification(p_notification: int):
 			print("Destroying CanvasPlane plugin")
 
 
-func get_name():
+func _get_plugin_name():
 	return "CanvasPlane"

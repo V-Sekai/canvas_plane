@@ -1,35 +1,49 @@
-extends Spatial
-class_name CanvasPlane, "icon_canvas_3d.svg"
-tool
+@tool
+class_name CanvasPlane, "icon_canvas_3d.svg" extends Node3D
+
 
 const function_pointer_receiver_const = preload("function_pointer_receiver.gd")
 
-export (float, 0.0, 1.0) var canvas_anchor_x: float = 0.0 setget set_canvas_anchor_x
-export (float, 0.0, 1.0) var canvas_anchor_y: float = 0.0 setget set_canvas_anchor_y
+@export_range(0.0, 1.0)  var canvas_anchor_x: float = 0.0 :
+	set = set_canvas_anchor_x
+
+@export_range(0.0, 1.0)  var canvas_anchor_y: float = 0.0 :
+	set = set_canvas_anchor_y
+
 
 # Defaults to 16:9
-export (float) var canvas_width: float = 1920 setget set_canvas_width
-export (float) var canvas_height: float = 1080 setget set_canvas_height
+@export  var canvas_width: float = 1920 :
+	set = set_canvas_width
 
-export (float) var canvas_scale: float = 0.01 setget set_canvas_scale
+@export  var canvas_height: float = 1080 :
+	set = set_canvas_height
 
-export (bool) var interactable: bool = false setget set_interactable
-export (bool) var translucent: bool = false setget set_translucent
 
-export (int, LAYERS_2D_PHYSICS) var collision_mask: int = 0
-export (int, LAYERS_3D_PHYSICS) var collision_layer: int = 0
+@export  var canvas_scale: float = 0.01 :
+	set = set_canvas_scale
+
+
+@export  var interactable: bool = false :
+	set = set_interactable
+
+@export  var translucent: bool = false :
+	set = set_translucent
+
+
+@export  var collision_mask: int = 0 # (int, LAYERS_2D_PHYSICS) = 0
+@export  var collision_layer: int = 0 # (int, LAYERS_3D_PHYSICS) = 0
 
 # Render
-var spatial_root: Spatial = null
+var spatial_root: Node3D = null
 var mesh: Mesh = null
-var mesh_instance: MeshInstance = null
+var mesh_instance: MeshInstance3D = null
 var material: Material = null
-var viewport: Viewport = null
+var viewport: SubViewport = null
 var control_root: Control = null
 
 # Collision
-var pointer_receiver: function_pointer_receiver_const = null
-var collision_shape: CollisionShape = null
+var pointer_receiver: Area3D = null # function_pointer_receiver_const
+var collision_shape: CollisionShape3D = null
 
 # Interaction
 var previous_mouse_position: Vector2 = Vector2()
@@ -80,7 +94,7 @@ func _update() -> void:
 				collision_shape.get_parent().remove_child(collision_shape)
 
 			if interactable:
-				var box_shape = BoxShape.new()
+				var box_shape = BoxShape3D.new()
 				box_shape.set_extents(
 					Vector3(canvas_width * 0.5 * 0.5, canvas_height * 0.5 * 0.5, 0.0)
 				)
@@ -98,7 +112,7 @@ func get_control_root() -> Control:
 	return control_root
 
 
-func get_control_viewport() -> Viewport:
+func get_control_viewport() -> SubViewport:
 	return viewport
 
 
@@ -181,21 +195,21 @@ func on_pointer_release(p_position: Vector3) -> void:
 	previous_mouse_position = position_2d
 
 
-"""
-func on_pointer_moved(p_position : Vector3) -> void:
-	# Disabled temporarily because virtual mouse movement events buggy
-	var position_2d : Vector2 = get_spatial_origin_to_canvas_position(p_position)
-	
-	if position_2d != previous_mouse_position:
-		var event : InputEventMouseMotion = InputEventMouseMotion.new()
-		event.set_position(position_2d)
-		event.set_global_position(position_2d)
-		event.set_relative(position_2d - previous_mouse_position) # should this be scaled/warped?
-		event.set_button_mask(mouse_mask)
-		
-		#get_tree().set_input_as_handled()
-		viewport.input(event)
-		previous_mouse_position = position_2d"""
+## 
+## func on_pointer_moved(p_position : Vector3) -> void:
+## 	# Disabled temporarily because virtual mouse movement events buggy
+## 	var position_2d : Vector2 = get_spatial_origin_to_canvas_position(p_position)
+## 	
+## 	if position_2d != previous_mouse_position:
+## 		var event : InputEventMouseMotion = InputEventMouseMotion.new()
+## 		event.set_position(position_2d)
+## 		event.set_global_position(position_2d)
+## 		event.set_relative(position_2d - previous_mouse_position) # should this be scaled/warped?
+## 		event.set_button_mask(mouse_mask)
+## 		
+## 		#get_tree().set_input_as_handled()
+## 		viewport.input(event)
+## 		previous_mouse_position = position_2d
 
 
 func _process(_delta: float) -> void:
@@ -203,8 +217,8 @@ func _process(_delta: float) -> void:
 	set_process(false)
 
 func _init():
-	spatial_root = Spatial.new()
-	viewport = Viewport.new()
+	spatial_root = Node3D.new()
+	viewport = SubViewport.new()
 	control_root = Control.new()
 
 func _setup_viewport() -> void:
@@ -216,11 +230,11 @@ func _setup_viewport() -> void:
 	viewport.transparent_bg = true
 	viewport.disable_3d = true
 	viewport.keep_3d_linear = true
-	viewport.usage = Viewport.USAGE_2D_NO_SAMPLING
+	viewport.usage = SubViewport.USAGE_2D_NO_SAMPLING
 	viewport.audio_listener_enable_2d = false
 	viewport.audio_listener_enable_3d = false
-	viewport.render_target_update_mode = Viewport.UPDATE_ALWAYS
-	viewport.set_name("Viewport")
+	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	viewport.set_name("SubViewport")
 	spatial_root.add_child(viewport)
 
 	control_root.set_name("ControlRoot")
@@ -238,42 +252,42 @@ func _ready() -> void:
 	
 	mesh = PlaneMesh.new()
 
-	mesh_instance = MeshInstance.new()
+	mesh_instance = MeshInstance3D.new()
 	mesh_instance.set_mesh(mesh)
 	mesh_instance.rotate_x(-PI/2)
 	mesh_instance.set_scale(Vector3(1.0, -1.0, 1.0))
-	mesh_instance.set_name("MeshInstance")
+	mesh_instance.set_name("MeshInstance3D")
 	mesh_instance.set_skeleton_path(NodePath())
-	mesh_instance.set_cast_shadows_setting(GeometryInstance.SHADOW_CASTING_SETTING_OFF)
+	mesh_instance.set_cast_shadows_setting(GeometryInstance3D.SHADOW_CASTING_SETTING_OFF)
 	spatial_root.add_child(mesh_instance)
 
 	# Collision
 	pointer_receiver = function_pointer_receiver_const.new()
 	pointer_receiver.set_name("PointerReceiver")
 
-	assert(pointer_receiver.connect("pointer_pressed", self, "on_pointer_pressed") == OK)
-	assert(pointer_receiver.connect("pointer_release", self, "on_pointer_release") == OK)
-	#assert(pointer_receiver.connect("pointer_moved", self, "on_pointer_moved") == OK)
+	assert(pointer_receiver.connect("pointer_pressed", Callable(self, "on_pointer_pressed")) == OK)
+	assert(pointer_receiver.connect("pointer_release", Callable(self, "on_pointer_release")) == OK)
+	#assert(pointer_receiver.connect("pointer_moved", Callable(self, "on_pointer_moved")) == OK)
 
 	pointer_receiver.collision_mask = collision_mask
 	pointer_receiver.collision_layer = collision_layer
 	spatial_root.add_child(pointer_receiver)
 
-	collision_shape = CollisionShape.new()
-	collision_shape.set_name("CollisionShape")
+	collision_shape = CollisionShape3D.new()
+	collision_shape.set_name("CollisionShape3D")
 	pointer_receiver.add_child(collision_shape)
 
 	# Generate the unique material
-	material = SpatialMaterial.new()
+	material = StandardMaterial3D.new()
 	material.flags_unshaded = true
 	material.flags_transparent = translucent
 	material.flags_albedo_tex_force_srgb = true
 
 	# Texture
 	var flags: int = 0
-	var texture: Texture = viewport.get_texture()
-	flags |= Texture.FLAG_FILTER
-	flags |= Texture.FLAG_MIPMAPS
+	var texture: Texture2D = viewport.get_texture()
+	flags |= Texture2D.FLAG_FILTER
+	flags |= Texture2D.FLAG_MIPMAPS
 	texture.set_flags(flags)
 	if not Engine.is_editor_hint():
 		material.albedo_texture = texture

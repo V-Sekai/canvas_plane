@@ -1,4 +1,4 @@
-extends Area
+extends Area3D
 
 const math_funcs_const = preload("res://addons/math_util/math_funcs.gd")
 
@@ -8,7 +8,7 @@ signal pointer_release(p_at)
 
 
 func untransform_position(p_vector: Vector3) -> Vector3:
-	return global_transform.xform_inv(p_vector)
+	return (((p_vector) * (global_transform)))
 
 
 func untransform_normal(p_normal: Vector3) -> Vector3:

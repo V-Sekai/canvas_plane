@@ -1,65 +1,75 @@
-extends Spatial
-class_name Canvas3D, "icon_canvas_3d.svg"
-tool
+@tool
+class_name Canvas3D, "icon_canvas_3d.svg" extends Node3D
 
-const canvas_shader_const = preload("canvas_shader.shader")
+
+const canvas_shader_const = preload("canvas_shader.gdshader")
 const canvas_utils_const = preload("canvas_utils.gd")
 const function_pointer_receiver_const = preload("function_pointer_receiver.gd")
 
 var _is_dirty: bool = true
 
-export (Vector2) var offset_ratio: Vector2 = Vector2(0.5, 0.5) setget set_offset_ratio
-export (Vector2) var canvas_scale: Vector2 = Vector2(1.0, 1.0) setget set_canvas_scale
+@export  var offset_ratio: Vector2 = Vector2(0.5, 0.5) :
+	set = set_offset_ratio
+
+@export  var canvas_scale: Vector2 = Vector2(1.0, 1.0) :
+	set = set_canvas_scale
+
 
 enum BillboardMode {BILLBOARD_DISABLED, BILLBOARD_ENABLED, BILLBOARD_FIXED_Y, BILLBOARD_PARTICLES}
-export(BillboardMode) var billboard_mode: int = BillboardMode.BILLBOARD_DISABLED setget set_billboard_mode
+@export var billboard_mode: BillboardMode = BillboardMode.BILLBOARD_DISABLED :
+	set = set_billboard_mode
 
-export (bool) var interactable: bool = false setget set_interactable
-export (bool) var translucent: bool = false setget set_translucent
 
-export (int, LAYERS_2D_PHYSICS) var collision_mask: int = 0
-export (int, LAYERS_3D_PHYSICS) var collision_layer: int = 0
+@export  var interactable: bool = false :
+	set = set_interactable
+
+@export  var translucent: bool = false :
+	set = set_translucent
+
+
+@export  var collision_mask: int = 0 # (int, LAYERS_2D_PHYSICS) = 0
+@export  var collision_layer: int = 0 # (int, LAYERS_3D_PHYSICS) = 0
 
 var tree_changed: bool = true
 var original_canvas_rid: RID = RID()
 
 # Render
 var canvas_size: Vector2 = Vector2()
-var spatial_root: Spatial = null
+var spatial_root: Node3D = null
 var mesh: Mesh = null
-var mesh_instance: MeshInstance = null
+var mesh_instance: MeshInstance3D = null
 var material: Material = null
-var viewport: Viewport = null
+var viewport: SubViewport = null
 var control_root: Control = null
 
 # Collision
-var pointer_receiver: function_pointer_receiver_const = null
-var collision_shape: CollisionShape = null
+var pointer_receiver: Area3D = null # function_pointer_receiver_const
+var collision_shape: CollisionShape3D = null
 
 # Interaction
 var previous_mouse_position: Vector2 = Vector2()
 var mouse_mask: int = 0
 
-"""
-func get_spatial_origin_to_canvas_position(p_origin: Vector3) -> Vector2:
-	var transform_scale: Vector2 = Vector2(
-		global_transform.basis.get_scale().x, global_transform.basis.get_scale().y
-	)
-
-	var inverse_transform: Vector2 = Vector2(1.0, 1.0) / transform_scale
-	var point: Vector2 = Vector2(p_origin.x, p_origin.y) * inverse_transform * inverse_transform
-	var point: Vector2 = Vector2(p_origin.x, p_origin.y) * inverse_transform * inverse_transform
-
-	var ratio: Vector2 = (
-		Vector2(0.5, 0.5)
-		+ (point / canvas_scale) / ((Vector2(canvas_width, canvas_height) * canvas_scale) * 0.5)
-	)
-	ratio.y = 1.0 - ratio.y  # Flip the Y-axis
-
-	var canvas_position: Vector2 = ratio * Vector2(canvas_width, canvas_height)
-
-	return canvas_position
-"""
+## 
+## func get_spatial_origin_to_canvas_position(p_origin: Vector3) -> Vector2:
+## 	var transform_scale: Vector2 = Vector2(
+## 		global_transform.basis.get_scale().x, global_transform.basis.get_scale().y
+## 	)
+## 
+## 	var inverse_transform: Vector2 = Vector2(1.0, 1.0) / transform_scale
+## 	var point: Vector2 = Vector2(p_origin.x, p_origin.y) * inverse_transform * inverse_transform
+## 	var point: Vector2 = Vector2(p_origin.x, p_origin.y) * inverse_transform * inverse_transform
+## 
+## 	var ratio: Vector2 = (
+## 		Vector2(0.5, 0.5)
+## 		+ (point / canvas_scale) / ((Vector2(canvas_width, canvas_height) * canvas_scale) * 0.5)
+## 	)
+## 	ratio.y = 1.0 - ratio.y  # Flip the Y-axis
+## 
+## 	var canvas_position: Vector2 = ratio * Vector2(canvas_width, canvas_height)
+## 
+## 	return canvas_position
+## 
 
 func _update_aabb() -> void:
 	if mesh and mesh_instance:
@@ -97,7 +107,7 @@ func get_control_root() -> Control:
 	return control_root
 
 
-func get_control_viewport() -> Viewport:
+func get_control_viewport() -> SubViewport:
 	return viewport
 
 
@@ -128,10 +138,10 @@ func set_billboard_mode(p_billboard_mode: int) -> void:
 
 
 func _setup_canvas_item() -> void:
-	if !control_root.is_connected("resized", self, "_resized"):
-		assert(control_root.connect("resized", self, "_resized") == OK)
+	if !control_root.is_connected("resized", Callable(self, "_resized")):
+		assert(control_root.connect("resized", Callable(self, "_resized")) == OK)
 	original_canvas_rid = control_root.get_canvas()
-	VisualServer.canvas_item_set_parent(control_root.get_canvas_item(), viewport.find_world_2d().get_canvas())
+	RenderingServer.canvas_item_set_parent(control_root.get_canvas_item(), viewport.find_world_2d().get_canvas())
 
 
 func _set_mesh_material(p_material: Material) -> void:
@@ -149,9 +159,9 @@ func _find_control_root() -> void:
 			
 			# Clear up the old control root
 			if control_root:
-				if control_root.is_connected("resized", self, "_resized"):
-					control_root.disconnect("resized", self, "_resized")
-					VisualServer.canvas_item_set_parent(control_root.get_canvas_item(), original_canvas_rid)
+				if control_root.is_connected("resized", Callable(self, "_resized")):
+					control_root.disconnect("resized", Callable(self, "_resized"))
+					RenderingServer.canvas_item_set_parent(control_root.get_canvas_item(), original_canvas_rid)
 			
 			# Assign the new control rool and give 
 			control_root = new_control_root
@@ -196,27 +206,27 @@ func _resized() -> void:
 
 func _exit_tree():
 	if Engine.is_editor_hint():
-		if get_tree().is_connected("tree_changed", self, "_tree_changed"):
-			get_tree().disconnect("tree_changed", self, "_tree_changed")
+		if get_tree().is_connected("tree_changed", Callable(self, "_tree_changed")):
+			get_tree().disconnect("tree_changed", Callable(self, "_tree_changed"))
 		if control_root:
-			if control_root.is_connected("resized", self, "_resized"):
-				control_root.disconnect("resized", self, "_resized")
+			if control_root.is_connected("resized", Callable(self, "_resized")):
+				control_root.disconnect("resized", Callable(self, "_resized"))
 
 func _enter_tree():
 	if control_root and viewport:
 		call_deferred("_setup_canvas_item")
 
 func _ready() -> void:
-	spatial_root = Spatial.new()
+	spatial_root = Node3D.new()
 	spatial_root.set_name("SpatialRoot")
 	add_child(spatial_root)
 
 	mesh = QuadMesh.new()
 
-	mesh_instance = MeshInstance.new()
+	mesh_instance = MeshInstance3D.new()
 	mesh_instance.set_mesh(mesh)
 	mesh_instance.set_scale(Vector3(1.0, 1.0, 1.0))
-	mesh_instance.set_name("MeshInstance")
+	mesh_instance.set_name("MeshInstance3D")
 	mesh_instance.set_skeleton_path(NodePath())
 	
 	spatial_root.add_child(mesh_instance)
@@ -227,30 +237,30 @@ func _ready() -> void:
 	pointer_receiver = function_pointer_receiver_const.new()
 	pointer_receiver.set_name("PointerReceiver")
 
-	assert(pointer_receiver.connect("pointer_pressed", self, "on_pointer_pressed") == OK)
-	assert(pointer_receiver.connect("pointer_release", self, "on_pointer_release") == OK)
+	assert(pointer_receiver.connect("pointer_pressed", Callable(self, "on_pointer_pressed")) == OK)
+	assert(pointer_receiver.connect("pointer_release", Callable(self, "on_pointer_release")) == OK)
 
 	pointer_receiver.collision_mask = collision_mask
 	pointer_receiver.collision_layer = collision_layer
 	spatial_root.add_child(pointer_receiver)
 
-	collision_shape = CollisionShape.new()
-	collision_shape.set_name("CollisionShape")
+	collision_shape = CollisionShape3D.new()
+	collision_shape.set_name("CollisionShape3D")
 	pointer_receiver.add_child(collision_shape)
 
-	viewport = Viewport.new()
+	viewport = SubViewport.new()
 	viewport.size = Vector2(0, 0)
 	viewport.hdr = false
 	viewport.transparent_bg = true
 	viewport.disable_3d = true
 	viewport.keep_3d_linear = true
-	viewport.usage = Viewport.USAGE_2D_NO_SAMPLING
+	viewport.usage = SubViewport.USAGE_2D_NO_SAMPLING
 	viewport.audio_listener_enable_2d = false
 	viewport.audio_listener_enable_3d = false
-	viewport.render_target_update_mode = Viewport.UPDATE_ALWAYS
-	viewport.set_name("Viewport")
+	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	viewport.set_name("SubViewport")
 	if Engine.is_editor_hint():
-		VisualServer.viewport_attach_canvas(get_viewport().get_viewport_rid(), viewport.find_world_2d().get_canvas())
+		RenderingServer.viewport_attach_canvas(get_viewport().get_viewport_rid(), viewport.find_world_2d().get_canvas())
 	else:
 		_find_control_root()
 	
@@ -266,10 +276,10 @@ func _ready() -> void:
 	
 	# Texture
 	var texture: ViewportTexture = viewport.get_texture()
-	var flags: int = Texture.FLAGS_DEFAULT
+	var flags: int = Texture2D.FLAGS_DEFAULT
 	texture.set_flags(flags)
 	material.set_shader_param("texture_albedo", texture)
 
 	if Engine.is_editor_hint():
-		if get_tree().connect("tree_changed", self, "_tree_changed") != OK:
+		if get_tree().connect("tree_changed", Callable(self, "_tree_changed")) != OK:
 			printerr("Could not connect tree_changed")

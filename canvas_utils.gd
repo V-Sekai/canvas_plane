@@ -1,4 +1,4 @@
-tool
+@tool
 
 const UI_PIXELS_TO_METER = 1.0 / 1024
 
