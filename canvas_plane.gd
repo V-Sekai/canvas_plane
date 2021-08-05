@@ -85,17 +85,17 @@ func _update() -> void:
 		mesh.set_size(Vector2(canvas_width, canvas_height) * 0.5)
 
 	if mesh_instance:
-		mesh_instance.set_translation(Vector3(canvas_width_offset, canvas_height_offset, 0))
+		mesh_instance.set_position(Vector3(canvas_width_offset, canvas_height_offset, 0))
 
 	if pointer_receiver:
-		pointer_receiver.set_translation(Vector3(canvas_width_offset, canvas_height_offset, 0))
+		pointer_receiver.set_position(Vector3(canvas_width_offset, canvas_height_offset, 0))
 		if collision_shape:
 			if collision_shape.is_inside_tree():
 				collision_shape.get_parent().remove_child(collision_shape)
 
 			if interactable:
 				var box_shape = BoxShape3D.new()
-				box_shape.set_extents(
+				box_shape.set_size(
 					Vector3(canvas_width * 0.5 * 0.5, canvas_height * 0.5 * 0.5, 0.0)
 				)
 				collision_shape.set_shape(box_shape)
@@ -226,11 +226,11 @@ func _setup_viewport() -> void:
 	add_child(spatial_root)
 	
 	viewport.size = Vector2(canvas_width, canvas_height)
-	viewport.hdr = false
+	# viewport.hdr = false
 	viewport.transparent_bg = true
-	viewport.disable_3d = true
-	viewport.keep_3d_linear = true
-	viewport.usage = SubViewport.USAGE_2D_NO_SAMPLING
+	# viewport.disable_3d = true
+	# viewport.keep_3d_linear = true
+	# viewport.usage = SubViewport.USAGE_2D_NO_SAMPLING
 	viewport.audio_listener_enable_2d = false
 	viewport.audio_listener_enable_3d = false
 	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
@@ -284,11 +284,12 @@ func _ready() -> void:
 	material.flags_albedo_tex_force_srgb = true
 
 	# Texture
-	var flags: int = 0
+	# var flags: int = 0
 	var texture: Texture2D = viewport.get_texture()
-	flags |= Texture2D.FLAG_FILTER
-	flags |= Texture2D.FLAG_MIPMAPS
-	texture.set_flags(flags)
+	# FIXME: No way to set FILTER and MIPMAPS on viewport textures
+	#flags |= Texture2D.FLAG_FILTER
+	#flags |= Texture2D.FLAG_MIPMAPS
+	#texture.set_flags(flags)
 	if not Engine.is_editor_hint():
 		material.albedo_texture = texture
 

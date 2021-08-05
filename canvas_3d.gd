@@ -96,7 +96,7 @@ func _update() -> void:
 		mesh.set_size(scaled_canvas_size * canvas_scale)
 
 	if mesh_instance:
-		mesh_instance.set_translation(Vector3(canvas_offset.x, canvas_offset.y, 0))
+		mesh_instance.set_position(Vector3(canvas_offset.x, canvas_offset.y, 0))
 		
 	_update_aabb()
 		
@@ -250,11 +250,11 @@ func _ready() -> void:
 
 	viewport = SubViewport.new()
 	viewport.size = Vector2(0, 0)
-	viewport.hdr = false
+	# viewport.hdr = false
 	viewport.transparent_bg = true
-	viewport.disable_3d = true
-	viewport.keep_3d_linear = true
-	viewport.usage = SubViewport.USAGE_2D_NO_SAMPLING
+	# viewport.disable_3d = true
+	# viewport.keep_3d_linear = true
+	# viewport.usage = SubViewport.USAGE_2D_NO_SAMPLING
 	viewport.audio_listener_enable_2d = false
 	viewport.audio_listener_enable_3d = false
 	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
@@ -276,8 +276,8 @@ func _ready() -> void:
 	
 	# Texture
 	var texture: ViewportTexture = viewport.get_texture()
-	var flags: int = Texture2D.FLAGS_DEFAULT
-	texture.set_flags(flags)
+	# var flags: int = Texture2D.FLAGS_DEFAULT
+	# texture.set_flags(flags)
 	material.set_shader_param("texture_albedo", texture)
 
 	if Engine.is_editor_hint():
