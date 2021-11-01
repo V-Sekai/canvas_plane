@@ -12,8 +12,8 @@ func untransform_position(p_vector: Vector3) -> Vector3:
 
 
 func untransform_normal(p_normal: Vector3) -> Vector3:
-	var basis: Basis = global_transform.basis.orthonormalized()
-	return math_funcs_const.transform_directon_vector(p_normal, basis.inverse())
+	var current_basis: Basis = global_transform.basis.orthonormalized()
+	return math_funcs_const.transform_directon_vector(p_normal, current_basis.inverse())
 
 
 func validate_pointer(p_normal: Vector3) -> bool:
