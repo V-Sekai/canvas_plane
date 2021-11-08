@@ -7,7 +7,7 @@ uniform float bias = 0.0;
 uniform int billboard_mode = 0;
 
 void vertex() {
-	UV=vec2(UV.x, 1.0 - UV.y);
+	UV=vec2(UV.x, UV.y);
 	if (billboard_mode >= 1) {
 		
 		mat4 mat_world = mat4(normalize(CAMERA_MATRIX[0])*length(WORLD_MATRIX[0]),normalize(CAMERA_MATRIX[1])*length(WORLD_MATRIX[0]),normalize(CAMERA_MATRIX[2])*length(WORLD_MATRIX[2]),WORLD_MATRIX[3]);
@@ -42,7 +42,6 @@ vec4 ordered_grid_super_sampling(sampler2D p_texture, vec2 p_uv, float p_bias) {
 	vec2 offset_uv = vec2(0.0, 0.0);
 	
 	vec4 color;
-	
 	offset_uv.xy = p_uv + UV_OFFSETS.x * dx + UV_OFFSETS.y * dy;
 	color += texture(p_texture, offset_uv, p_bias);
 	offset_uv.xy = p_uv - UV_OFFSETS.x * dx - UV_OFFSETS.y * dy;
@@ -57,12 +56,18 @@ vec4 ordered_grid_super_sampling(sampler2D p_texture, vec2 p_uv, float p_bias) {
 	return color;
 }
 
+vec4 passthrough_sampling(sampler2D p_texture, vec2 p_uv, float p_bias) {
+	vec4 color = texture(p_texture, p_uv);
+	return color;
+}
+
 void fragment() {
-	vec4 color = ordered_grid_super_sampling(texture_albedo, UV, bias);
-	
-	ALBEDO = srgb_conversion(color.rgb);
+//  FIXME: iFire 2021-11-07 
+//	vec4 color = ordered_grid_super_sampling(texture_albedo, UV, bias);
+	vec4 color = passthrough_sampling(texture_albedo, UV, bias);
+	ALBEDO = color.rgb;
+	ALPHA = color.a;
 	METALLIC = 0.0;
 	ROUGHNESS = 1.0;
 	SPECULAR = 0.5;
-	ALPHA = color.a;
 }
