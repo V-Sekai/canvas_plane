@@ -2,9 +2,9 @@
 class_name Canvas3D, "icon_canvas_3d.svg" extends Node3D
 
 
-const canvas_shader_const = preload("canvas_shader.gdshader")
-const canvas_utils_const = preload("canvas_utils.gd")
-const function_pointer_receiver_const = preload("function_pointer_receiver.gd")
+const canvas_shader_const = preload("addons/canvas_plane/canvas_shader.gdshader")
+const canvas_utils_const = preload("addons/canvas_plane/canvas_utils.gd")
+const function_pointer_receiver_const = preload("addons/canvas_plane/function_pointer_receiver.gd")
 
 var _is_dirty: bool = true
 
