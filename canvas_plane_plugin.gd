@@ -3,7 +3,7 @@ extends EditorPlugin
 
 var editor_interface = null
 
-func _init():
+func _enable_plugin():
 	print("Initialising CanvasPlane plugin")
 
 
