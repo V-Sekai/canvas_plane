@@ -2,8 +2,8 @@
 class_name Canvas3DAnchor extends Node3D
 
 
-const canvas_utils_const = preload("canvas_utils.gd")
-const spatial_canvas_const = preload("canvas_3d.gd")
+const canvas_utils_const = preload("res://addons/canvas_plane/canvas_utils.gd")
+const spatial_canvas_const = preload("res://addons/canvas_plane/canvas_3d.gd")
 
 @export var canvas_item_node_path: NodePath = NodePath():
 	set = set_canvas_item_node_path
