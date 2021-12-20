@@ -8,10 +8,10 @@ const function_pointer_receiver_const = preload("function_pointer_receiver.gd")
 
 var _is_dirty: bool = true
 
-@export  var offset_ratio: Vector2 = Vector2(0.5, 0.5) :
+@export var offset_ratio: Vector2 = Vector2(0.5, 0.5) :
 	set = set_offset_ratio
 
-@export  var canvas_scale: Vector2 = Vector2(1.0, 1.0) :
+@export var canvas_scale: Vector2 = Vector2(1.0, 1.0) :
 	set = set_canvas_scale
 
 
@@ -20,15 +20,15 @@ enum BillboardMode {BILLBOARD_DISABLED, BILLBOARD_ENABLED, BILLBOARD_FIXED_Y, BI
 	set = set_billboard_mode
 
 
-@export  var interactable: bool = false :
+@export var interactable: bool = false :
 	set = set_interactable
 
-@export  var translucent: bool = false :
+@export var translucent: bool = false :
 	set = set_translucent
 
 
-@export  var collision_mask: int = 0 # (int, LAYERS_2D_PHYSICS) = 0
-@export  var collision_layer: int = 0 # (int, LAYERS_3D_PHYSICS) = 0
+@export_flags_3d_physics  var collision_mask: int = 0
+@export_flags_3d_physics  var collision_layer: int = 0
 
 var tree_changed: bool = true
 var original_canvas_rid: RID = RID()

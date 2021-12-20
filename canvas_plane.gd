@@ -12,26 +12,26 @@ const function_pointer_receiver_const = preload("function_pointer_receiver.gd")
 
 
 # Defaults to 16:9
-@export  var canvas_width: float = 1920 :
+@export var canvas_width: float = 1920 :
 	set = set_canvas_width
 
-@export  var canvas_height: float = 1080 :
+@export var canvas_height: float = 1080 :
 	set = set_canvas_height
 
 
-@export  var canvas_scale: float = 0.01 :
+@export var canvas_scale: float = 0.01 :
 	set = set_canvas_scale
 
 
-@export  var interactable: bool = false :
+@export var interactable: bool = false :
 	set = set_interactable
 
-@export  var translucent: bool = false :
+@export var translucent: bool = false :
 	set = set_translucent
 
 
-@export  var collision_mask: int = 0 # (int, LAYERS_2D_PHYSICS) = 0
-@export  var collision_layer: int = 0 # (int, LAYERS_3D_PHYSICS) = 0
+@export_flags_3d_physics  var collision_mask: int = 0
+@export_flags_3d_physics  var collision_layer: int = 0
 
 # Render
 var spatial_root: Node3D = null
