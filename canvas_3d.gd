@@ -73,7 +73,7 @@ var mouse_mask: int = 0
 
 func _update_aabb() -> void:
 	if mesh and mesh_instance:
-		if billboard_mode != BillboardMode.BILLBOARD_DISABLED:
+		if material is BaseMaterial3D and material.billboard_mode == BaseMaterial3D.BILLBOARD_DISABLED:
 			var longest_axis_size: float = mesh.get_aabb().get_longest_axis_size()
 			mesh_instance.set_custom_aabb(AABB(mesh.get_aabb().position, Vector3(longest_axis_size, longest_axis_size, longest_axis_size)))
 		else:
@@ -113,15 +113,12 @@ func get_control_viewport() -> SubViewport:
 
 func set_offset_ratio(p_offset_ratio: Vector2) -> void:
 	offset_ratio = p_offset_ratio
-	set_dirty_flag()
 
 func set_canvas_scale(p_canvas_scale: Vector2) -> void:
 	canvas_scale = p_canvas_scale
-	set_dirty_flag()
 
 func set_interactable(p_interactable: bool) -> void:
 	interactable = p_interactable
-	set_dirty_flag()
 
 
 func set_translucent(p_translucent: bool) -> void:
