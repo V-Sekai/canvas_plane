@@ -100,7 +100,7 @@ func _update() -> void:
 				)
 				collision_shape.set_shape(box_shape)
 
-				pointer_receiver.add_child(collision_shape)
+				pointer_receiver.add_child(collision_shape, true)
 			else:
 				collision_shape.set_shape(null)
 
@@ -223,7 +223,7 @@ func _init():
 
 func _setup_viewport() -> void:
 	spatial_root.set_name("SpatialRoot")
-	add_child(spatial_root)
+	add_child(spatial_root, true)
 	
 	viewport.size = Vector2(canvas_width, canvas_height)
 	# viewport.hdr = false
@@ -235,17 +235,17 @@ func _setup_viewport() -> void:
 	viewport.audio_listener_enable_3d = false
 	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	viewport.set_name("SubViewport")
-	spatial_root.add_child(viewport)
+	spatial_root.add_child(viewport, true)
 
 	control_root.set_name("ControlRoot")
 	control_root.set_anchors_preset(Control.PRESET_WIDE)
-	viewport.add_child(control_root)
+	viewport.add_child(control_root, true)
 	
 	if not Engine.is_editor_hint():
 		for child in get_children():
 			if child.owner != null:
 				child.get_parent().remove_child(child)
-				control_root.add_child(child)
+				control_root.add_child(child, true)
 
 func _ready() -> void:
 	_setup_viewport()
@@ -259,7 +259,7 @@ func _ready() -> void:
 	mesh_instance.set_name("MeshInstance3D")
 	mesh_instance.set_skeleton_path(NodePath())
 	mesh_instance.set_cast_shadows_setting(GeometryInstance3D.SHADOW_CASTING_SETTING_OFF)
-	spatial_root.add_child(mesh_instance)
+	spatial_root.add_child(mesh_instance, true)
 
 	# Collision
 	pointer_receiver = function_pointer_receiver_const.new()
@@ -271,11 +271,11 @@ func _ready() -> void:
 
 	pointer_receiver.collision_mask = collision_mask
 	pointer_receiver.collision_layer = collision_layer
-	spatial_root.add_child(pointer_receiver)
+	spatial_root.add_child(pointer_receiver, true)
 
 	collision_shape = CollisionShape3D.new()
 	collision_shape.set_name("CollisionShape3D")
-	pointer_receiver.add_child(collision_shape)
+	pointer_receiver.add_child(collision_shape, true)
 
 	# Generate the unique material
 	material = StandardMaterial3D.new()

@@ -216,7 +216,7 @@ func _enter_tree():
 func _ready() -> void:
 	spatial_root = Node3D.new()
 	spatial_root.set_name("SpatialRoot")
-	add_child(spatial_root)
+	add_child(spatial_root, true)
 
 	mesh = QuadMesh.new()
 
@@ -226,7 +226,7 @@ func _ready() -> void:
 	mesh_instance.set_name("MeshInstance3D")
 	mesh_instance.set_skeleton_path(NodePath())
 	
-	spatial_root.add_child(mesh_instance)
+	spatial_root.add_child(mesh_instance, true)
 	mesh_instance.set_owner(spatial_root)
 	spatial_root.set_owner(null)
 
@@ -239,11 +239,11 @@ func _ready() -> void:
 
 	pointer_receiver.collision_mask = collision_mask
 	pointer_receiver.collision_layer = collision_layer
-	spatial_root.add_child(pointer_receiver)
+	spatial_root.add_child(pointer_receiver, true)
 
 	collision_shape = CollisionShape3D.new()
 	collision_shape.set_name("CollisionShape3D")
-	pointer_receiver.add_child(collision_shape)
+	pointer_receiver.add_child(collision_shape, true)
 
 	viewport = SubViewport.new()
 	viewport.size = Vector2(0, 0)
@@ -261,7 +261,7 @@ func _ready() -> void:
 	else:
 		_find_control_root()
 	
-	spatial_root.add_child(viewport)
+	spatial_root.add_child(viewport, true)
 
 	# Generate the unique material
 	material = ShaderMaterial.new()
