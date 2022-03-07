@@ -279,9 +279,9 @@ func _ready() -> void:
 
 	# Generate the unique material
 	material = StandardMaterial3D.new()
-	material.flags_unshaded = true
-	material.flags_transparent = translucent
-	material.flags_albedo_tex_force_srgb = true
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.set_flag(BaseMaterial3D.FLAG_ALBEDO_TEXTURE_FORCE_SRGB, true)
 
 	# Texture
 	# var flags: int = 0
