@@ -265,9 +265,9 @@ func _ready() -> void:
 	pointer_receiver = function_pointer_receiver_const.new()
 	pointer_receiver.set_name("PointerReceiver")
 
-	assert(pointer_receiver.connect("pointer_pressed", Callable(self, "on_pointer_pressed")) == OK)
-	assert(pointer_receiver.connect("pointer_release", Callable(self, "on_pointer_release")) == OK)
-	#assert(pointer_receiver.connect("pointer_moved", Callable(self, "on_pointer_moved")) == OK)
+	assert(pointer_receiver.pointer_pressed.connect(self.on_pointer_pressed) == OK)
+	assert(pointer_receiver.pointer_release.connect(self.on_pointer_release) == OK)
+	#assert(pointer_receiver.pointer_moved.connect(self.on_pointer_moved) == OK)
 
 	pointer_receiver.collision_mask = collision_mask
 	pointer_receiver.collision_layer = collision_layer

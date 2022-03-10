@@ -25,13 +25,13 @@ func validate_pointer(p_normal: Vector3) -> bool:
 
 
 func on_pointer_pressed(p_position: Vector3, p_doubleclick: bool) -> void:
-	emit_signal("pointer_pressed", untransform_position(p_position), p_doubleclick)
+	pointer_pressed.emit(untransform_position(p_position), p_doubleclick)
 
 
 func on_pointer_moved(p_position: Vector3, p_normal: Vector3) -> void:
 	if validate_pointer(p_normal):
-		emit_signal("pointer_moved", p_position)
+		pointer_moved.emit(p_position)
 
 
 func on_pointer_release(p_position: Vector3) -> void:
-	emit_signal("pointer_release", untransform_position(p_position))
+	pointer_release.emit(untransform_position(p_position))

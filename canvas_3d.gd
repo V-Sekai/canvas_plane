@@ -135,8 +135,8 @@ func set_billboard_mode(p_billboard_mode: int) -> void:
 
 
 func _setup_canvas_item() -> void:
-	if !control_root.is_connected("resized", Callable(self, "_resized")):
-		assert(control_root.connect("resized", Callable(self, "_resized")) == OK)
+	if !control_root.resized.is_connected(self._resized):
+		assert(control_root.resized.connect(self._resized) == OK)
 	original_canvas_rid = control_root.get_canvas()
 	RenderingServer.canvas_item_set_parent(control_root.get_canvas_item(), viewport.find_world_2d().get_canvas())
 
@@ -156,8 +156,8 @@ func _find_control_root() -> void:
 			
 			# Clear up the old control root
 			if control_root:
-				if control_root.is_connected("resized", Callable(self, "_resized")):
-					control_root.disconnect("resized", Callable(self, "_resized"))
+				if control_root.resized.is_connected(self._resized):
+					control_root.resized.disconnect(self._resized)
 					RenderingServer.canvas_item_set_parent(control_root.get_canvas_item(), original_canvas_rid)
 			
 			# Assign the new control rool and give 
@@ -203,11 +203,11 @@ func _resized() -> void:
 
 func _exit_tree():
 	if Engine.is_editor_hint():
-		if get_tree().is_connected("tree_changed", Callable(self, "_tree_changed")):
-			get_tree().disconnect("tree_changed", Callable(self, "_tree_changed"))
+		if get_tree().tree_changed.is_connected(self._tree_changed):
+			get_tree().tree_changed.disconnect(self._tree_changed)
 		if control_root:
-			if control_root.is_connected("resized", Callable(self, "_resized")):
-				control_root.disconnect("resized", Callable(self, "_resized"))
+			if control_root.resized.is_connected(self._resized):
+				control_root.resized.disconnect(self._resized)
 
 func _enter_tree():
 	if control_root and viewport:
@@ -234,8 +234,9 @@ func _ready() -> void:
 	pointer_receiver = function_pointer_receiver_const.new()
 	pointer_receiver.set_name("PointerReceiver")
 
-	assert(pointer_receiver.connect("pointer_pressed", Callable(self, "on_pointer_pressed")) == OK)
-	assert(pointer_receiver.connect("pointer_release", Callable(self, "on_pointer_release")) == OK)
+	# FIXME: No on_pointer_release or on_pointer_pressed here. Do we copy from canvas_plane.gd?
+	#assert(pointer_receiver.pointer_pressed.connect(self.on_pointer_pressed) == OK)
+	#assert(pointer_receiver.pointer_release.connect(self.on_pointer_release) == OK)
 
 	pointer_receiver.collision_mask = collision_mask
 	pointer_receiver.collision_layer = collision_layer
@@ -278,5 +279,5 @@ func _ready() -> void:
 	material.set_shader_param("texture_albedo", texture)
 
 	if Engine.is_editor_hint():
-		if get_tree().connect("tree_changed", Callable(self, "_tree_changed")) != OK:
+		if get_tree().tree_changed.connect(self._tree_changed) != OK:
 			printerr("Could not connect tree_changed")
