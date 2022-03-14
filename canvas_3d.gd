@@ -172,7 +172,7 @@ func _update_control_root() -> void:
 		_find_control_root()
 		
 	if control_root:
-		canvas_size = control_root.rect_size
+		canvas_size = control_root.size
 	else:
 		canvas_size = Vector2()
 	
