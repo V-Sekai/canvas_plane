@@ -17,7 +17,7 @@ var _is_dirty: bool = true
 
 enum BillboardMode {BILLBOARD_DISABLED, BILLBOARD_ENABLED, BILLBOARD_FIXED_Y, BILLBOARD_PARTICLES}
 @export var billboard_mode: BillboardMode = BillboardMode.BILLBOARD_DISABLED :
-	set = set_billboard_mode
+	set = _set_billboard_mode
 
 
 @export var interactable: bool = false :
@@ -127,10 +127,10 @@ func set_translucent(p_translucent: bool) -> void:
 		material.flags_transparent = translucent
 
 
-func set_billboard_mode(p_billboard_mode: int) -> void:
-	billboard_mode = p_billboard_mode
+func _set_billboard_mode(p_billboard_mode: int) -> void:
+	set_billboard_mode(p_billboard_mode)
 	if material:
-		material.set_shader_param("billboard_mode", billboard_mode)
+		material.set_shader_param("billboard_mode", p_billboard_mode)
 	set_dirty_flag()
 
 
