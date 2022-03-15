@@ -128,7 +128,7 @@ func set_translucent(p_translucent: bool) -> void:
 
 
 func _set_billboard_mode(p_billboard_mode: int) -> void:
-	set_billboard_mode(p_billboard_mode)
+	billboard_mode = p_billboard_mode
 	if material:
 		material.set_shader_param("billboard_mode", p_billboard_mode)
 	set_dirty_flag()
