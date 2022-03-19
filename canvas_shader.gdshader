@@ -10,11 +10,11 @@ void vertex() {
 	UV=vec2(UV.x, UV.y);
 	if (billboard_mode >= 1) {
 		
-		mat4 mat_world = mat4(normalize(CAMERA_MATRIX[0])*length(WORLD_MATRIX[0]),normalize(CAMERA_MATRIX[1])*length(WORLD_MATRIX[0]),normalize(CAMERA_MATRIX[2])*length(WORLD_MATRIX[2]),WORLD_MATRIX[3]);
+		mat4 mat_world = mat4(normalize(INV_VIEW_MATRIX[0])*length(MODEL_MATRIX[0]),normalize(INV_VIEW_MATRIX[1])*length(MODEL_MATRIX[0]),normalize(INV_VIEW_MATRIX[2])*length(MODEL_MATRIX[2]),MODEL_MATRIX[3]);
 		
-	    vec3 target_position = CAMERA_MATRIX[3].xyz; // camera position?
-	    vec3 vertex = (WORLD_MATRIX * vec4(VERTEX, 1.0)).xyz;
-	    vec3 origin = (WORLD_MATRIX * vec4(0,0,0,1)).xyz;
+	    vec3 target_position = INV_VIEW_MATRIX[3].xyz; // camera position?
+	    vec3 vertex = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	    vec3 origin = (MODEL_MATRIX * vec4(0,0,0,1)).xyz;
 	    vec3 forward = normalize(target_position - origin);
 	    vec3 right = normalize(cross(vec3(0,1,0),forward));
 		vec3 up;
@@ -24,8 +24,8 @@ void vertex() {
 		} else {
 			up = normalize(cross(forward,right));
 		}
-	    mat3 mat = (mat3(right * length(WORLD_MATRIX[0]), up * length(WORLD_MATRIX[1]), forward * length(WORLD_MATRIX[2])));
-		MODELVIEW_MATRIX = INV_CAMERA_MATRIX * mat4(vec4(mat[0], 0.0), vec4(mat[1], 0.0), vec4(mat[2], 0.0), WORLD_MATRIX[3]);
+	    mat3 mat = (mat3(right * length(MODEL_MATRIX[0]), up * length(MODEL_MATRIX[1]), forward * length(MODEL_MATRIX[2])));
+		MODELVIEW_MATRIX = VIEW_MATRIX * mat4(vec4(mat[0], 0.0), vec4(mat[1], 0.0), vec4(mat[2], 0.0), MODEL_MATRIX[3]);
 	}
 }
 
