@@ -171,10 +171,10 @@ func on_pointer_pressed(p_position: Vector3, p_doubleclick: bool) -> void:
 	event.set_position(position_2d)
 	event.set_global_position(position_2d)
 	event.set_button_mask(mouse_mask)
-	event.set_doubleclick(p_doubleclick)
+	event.set_double_click(p_doubleclick)
 
 	#get_tree().set_input_as_handled()
-	viewport.input(event)
+	viewport.push_input(event)
 	previous_mouse_position = position_2d
 
 
@@ -191,7 +191,7 @@ func on_pointer_release(p_position: Vector3) -> void:
 	event.set_button_mask(mouse_mask)
 
 	#get_tree().set_input_as_handled()
-	viewport.input(event)
+	viewport.push_input(event)
 	previous_mouse_position = position_2d
 
 
@@ -208,7 +208,7 @@ func on_pointer_release(p_position: Vector3) -> void:
 ## 		event.set_button_mask(mouse_mask)
 ## 		
 ## 		#get_tree().set_input_as_handled()
-## 		viewport.input(event)
+## 		viewport.push_input(event)
 ## 		previous_mouse_position = position_2d
 
 
