@@ -127,7 +127,7 @@ func set_translucent(p_translucent: bool) -> void:
 		material.flags_transparent = translucent
 
 
-func _set_billboard_mode(p_billboard_mode: int) -> void:
+func _set_billboard_mode(p_billboard_mode: BillboardMode) -> void:
 	billboard_mode = p_billboard_mode
 	if material:
 		material.set_shader_param("billboard_mode", p_billboard_mode)
