@@ -2,7 +2,7 @@ shader_type spatial;
 
 render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx,unshaded;
 
-uniform sampler2D texture_albedo : hint_albedo;
+uniform sampler2D texture_albedo : source_color;
 uniform float bias = 0.0;
 uniform int billboard_mode = 0;
 
