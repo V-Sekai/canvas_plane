@@ -255,7 +255,7 @@ func _ready() -> void:
 	mesh_instance = MeshInstance3D.new()
 	mesh_instance.set_mesh(mesh)
 	mesh_instance.rotate_x(-PI/2)
-	mesh_instance.set_scale(Vector3(1.0, -1.0, 1.0))
+	mesh_instance.set_scale(Vector3(1.0, -1.0, -1.0))
 	mesh_instance.set_name("MeshInstance3D")
 	mesh_instance.set_skeleton_path(NodePath())
 	mesh_instance.set_cast_shadows_setting(GeometryInstance3D.SHADOW_CASTING_SETTING_OFF)
