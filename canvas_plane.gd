@@ -238,7 +238,7 @@ func _setup_viewport() -> void:
 	spatial_root.add_child(viewport, true)
 
 	control_root.set_name("ControlRoot")
-	control_root.set_anchors_preset(Control.PRESET_WIDE)
+	control_root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	viewport.add_child(control_root, true)
 	
 	if not Engine.is_editor_hint():
