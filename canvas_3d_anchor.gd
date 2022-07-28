@@ -34,7 +34,7 @@ func update_transform() -> void:
 		Vector2(ci_gt.origin.x, 1.0 - ci_gt.origin.y)\
 		- Vector2(canvas_size.x, 1.0 - canvas_size.y)  * spatial_canvas.offset_ratio
 		
-		transform = Transform3D().translated(\
+		transform = Transform3D().translated_local((\
 		Vector3(origin.x, origin.y, 0.0) *  canvas_utils_const.UI_PIXELS_TO_METER)\
 		* Transform3D(ci_gi_3d.basis.inverse(), Vector3())
 		
@@ -43,7 +43,7 @@ func update_transform() -> void:
 			var rect_offset = Vector2(ci_size.x, ci_size.y) *\
 			Vector2(offset_ratio.x, -offset_ratio.y)
 			
-			transform = transform.translated(Vector3(\
+			transform = transform.translated_local((Vector3(\
 			rect_offset.x * canvas_utils_const.UI_PIXELS_TO_METER,\
 			rect_offset.y * canvas_utils_const.UI_PIXELS_TO_METER,
 			z_offset * 0.1))
