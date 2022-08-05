@@ -130,7 +130,7 @@ func set_translucent(p_translucent: bool) -> void:
 func _set_billboard_mode(p_billboard_mode: BillboardMode) -> void:
 	billboard_mode = p_billboard_mode
 	if material:
-		material.set_shader_param("billboard_mode", p_billboard_mode)
+		material.set_shader_uniform("billboard_mode", p_billboard_mode)
 	set_dirty_flag()
 
 
@@ -267,7 +267,7 @@ func _ready() -> void:
 	# Generate the unique material
 	material = ShaderMaterial.new()
 	material.shader = canvas_shader_const
-	material.set_shader_param("billboard_mode", billboard_mode)
+	material.set_shader_uniform("billboard_mode", billboard_mode)
 	
 	_update()
 	_set_mesh_material(material)
@@ -276,7 +276,7 @@ func _ready() -> void:
 	var texture: ViewportTexture = viewport.get_texture()
 	# var flags: int = Texture2D.FLAGS_DEFAULT
 	# texture.set_flags(flags)
-	material.set_shader_param("texture_albedo", texture)
+	material.set_shader_uniform("texture_albedo", texture)
 
 	if Engine.is_editor_hint():
 		if get_tree().tree_changed.connect(self._tree_changed) != OK:
