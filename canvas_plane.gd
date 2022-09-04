@@ -1,5 +1,8 @@
 @tool
-class_name CanvasPlane, "icon_canvas_3d.svg" extends Node3D
+class_name CanvasPlane
+extends Node3D
+
+@icon("icon_canvas_3d.svg")
 
 
 const function_pointer_receiver_const = preload("function_pointer_receiver.gd")
