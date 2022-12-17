@@ -36,7 +36,7 @@ signal pointer_release(p_at)
 
 
 func untransform_position(p_vector: Vector3) -> Vector3:
-	return (((p_vector) * (global_transform)))
+	return (p_vector) * (global_transform)
 
 
 func untransform_normal(p_normal: Vector3) -> Vector3:

@@ -32,37 +32,32 @@ extends Node3D
 
 @icon("icon_canvas_3d.svg")
 
-
 const function_pointer_receiver_const = preload("function_pointer_receiver.gd")
 
-@export_range(0.0, 1.0)  var canvas_anchor_x: float = 0.0 :
+@export_range(0.0, 1.0) var canvas_anchor_x: float = 0.0:
 	set = set_canvas_anchor_x
 
-@export_range(0.0, 1.0)  var canvas_anchor_y: float = 0.0 :
+@export_range(0.0, 1.0) var canvas_anchor_y: float = 0.0:
 	set = set_canvas_anchor_y
 
-
 # Defaults to 16:9
-@export var canvas_width: float = 1920 :
+@export var canvas_width: float = 1920:
 	set = set_canvas_width
 
-@export var canvas_height: float = 1080 :
+@export var canvas_height: float = 1080:
 	set = set_canvas_height
 
-
-@export var canvas_scale: float = 0.01 :
+@export var canvas_scale: float = 0.01:
 	set = set_canvas_scale
 
-
-@export var interactable: bool = false :
+@export var interactable: bool = false:
 	set = set_interactable
 
-@export var translucent: bool = false :
+@export var translucent: bool = false:
 	set = set_translucent
 
-
-@export_flags_3d_physics  var collision_mask: int = 0
-@export_flags_3d_physics  var collision_layer: int = 0
+@export_flags_3d_physics var collision_mask: int = 0
+@export_flags_3d_physics var collision_layer: int = 0
 
 # Render
 var spatial_root: Node3D = null
@@ -73,7 +68,7 @@ var viewport: SubViewport = null
 var control_root: Control = null
 
 # Collision
-var pointer_receiver: Area3D = null # function_pointer_receiver_const
+var pointer_receiver: Area3D = null  # function_pointer_receiver_const
 var collision_shape: CollisionShape3D = null
 
 # Interaction
@@ -82,17 +77,12 @@ var mouse_mask: int = 0
 
 
 func get_spatial_origin_to_canvas_position(p_origin: Vector3) -> Vector2:
-	var transform_scale: Vector2 = Vector2(
-		global_transform.basis.get_scale().x, global_transform.basis.get_scale().y
-	)
+	var transform_scale: Vector2 = Vector2(global_transform.basis.get_scale().x, global_transform.basis.get_scale().y)
 
 	var inverse_transform: Vector2 = Vector2(1.0, 1.0) / transform_scale
 	var point: Vector2 = Vector2(p_origin.x, p_origin.y) * inverse_transform * inverse_transform
 
-	var ratio: Vector2 = (
-		Vector2(0.5, 0.5)
-		+ (point / canvas_scale) / ((Vector2(canvas_width, canvas_height) * canvas_scale) * 0.5)
-	)
+	var ratio: Vector2 = Vector2(0.5, 0.5) + (point / canvas_scale) / ((Vector2(canvas_width, canvas_height) * canvas_scale) * 0.5)
 	ratio.y = 1.0 - ratio.y  # Flip the Y-axis
 
 	var canvas_position: Vector2 = ratio * Vector2(canvas_width, canvas_height)
@@ -103,14 +93,8 @@ func get_spatial_origin_to_canvas_position(p_origin: Vector3) -> Vector2:
 
 
 func _update() -> void:
-	var canvas_width_offset: float = (
-		(canvas_width * 0.5 * 0.5)
-		- (canvas_width * 0.5 * canvas_anchor_x)
-	)
-	var canvas_height_offset: float = (
-		-(canvas_height * 0.5 * 0.5)
-		+ (canvas_height * 0.5 * canvas_anchor_y)
-	)
+	var canvas_width_offset: float = (canvas_width * 0.5 * 0.5) - (canvas_width * 0.5 * canvas_anchor_x)
+	var canvas_height_offset: float = -(canvas_height * 0.5 * 0.5) + (canvas_height * 0.5 * canvas_anchor_y)
 
 	if mesh:
 		mesh.set_size(Vector2(canvas_width, canvas_height) * 0.5)
@@ -126,9 +110,7 @@ func _update() -> void:
 
 			if interactable:
 				var box_shape = BoxShape3D.new()
-				box_shape.set_size(
-					Vector3(canvas_width * 0.5 * 0.5, canvas_height * 0.5 * 0.5, 0.0)
-				)
+				box_shape.set_size(Vector3(canvas_width * 0.5 * 0.5, canvas_height * 0.5 * 0.5, 0.0))
 				collision_shape.set_shape(box_shape)
 
 				pointer_receiver.add_child(collision_shape, true)
@@ -226,18 +208,18 @@ func on_pointer_release(p_position: Vector3) -> void:
 	previous_mouse_position = position_2d
 
 
-## 
+##
 ## func on_pointer_moved(p_position : Vector3) -> void:
 ## 	# Disabled temporarily because virtual mouse movement events buggy
 ## 	var position_2d : Vector2 = get_spatial_origin_to_canvas_position(p_position)
-## 	
+##
 ## 	if position_2d != previous_mouse_position:
 ## 		var event : InputEventMouseMotion = InputEventMouseMotion.new()
 ## 		event.set_position(position_2d)
 ## 		event.set_global_position(position_2d)
 ## 		event.set_relative(position_2d - previous_mouse_position) # should this be scaled/warped?
 ## 		event.set_button_mask(mouse_mask)
-## 		
+##
 ## 		#get_tree().set_input_as_handled()
 ## 		viewport.push_input(event)
 ## 		previous_mouse_position = position_2d
@@ -247,15 +229,17 @@ func _process(_delta: float) -> void:
 	_update()
 	set_process(false)
 
+
 func _init():
 	spatial_root = Node3D.new()
 	viewport = SubViewport.new()
 	control_root = Control.new()
 
+
 func _setup_viewport() -> void:
 	spatial_root.set_name("SpatialRoot")
 	add_child(spatial_root, true)
-	
+
 	viewport.size = Vector2(canvas_width, canvas_height)
 	# viewport.hdr = false
 	viewport.transparent_bg = true
@@ -271,21 +255,22 @@ func _setup_viewport() -> void:
 	control_root.set_name("ControlRoot")
 	control_root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	viewport.add_child(control_root, true)
-	
+
 	if not Engine.is_editor_hint():
 		for child in get_children():
 			if child.owner != null:
 				child.get_parent().remove_child(child)
 				control_root.add_child(child, true)
 
+
 func _ready() -> void:
 	_setup_viewport()
-	
+
 	mesh = PlaneMesh.new()
 
 	mesh_instance = MeshInstance3D.new()
 	mesh_instance.set_mesh(mesh)
-	mesh_instance.rotate_x(-PI/2)
+	mesh_instance.rotate_x(-PI / 2)
 	mesh_instance.set_scale(Vector3(1.0, -1.0, -1.0))
 	mesh_instance.set_name("MeshInstance3D")
 	mesh_instance.set_skeleton_path(NodePath())
