@@ -27,9 +27,9 @@
 # SOFTWARE.
 
 @tool
+@icon("icon_canvas_3d.svg")
 class_name Canvas3D
 extends Node3D
-@icon("icon_canvas_3d.svg")
 
 const canvas_shader_const = preload("canvas_shader.gdshader")
 const canvas_utils_const = preload("canvas_utils.gd")
