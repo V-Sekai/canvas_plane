@@ -27,10 +27,10 @@
 # SOFTWARE.
 
 @tool
+@icon("icon_canvas_3d.svg")
 class_name CanvasPlane
 extends Node3D
 
-@icon("icon_canvas_3d.svg")
 
 const function_pointer_receiver_const = preload("function_pointer_receiver.gd")
 
