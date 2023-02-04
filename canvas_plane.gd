@@ -31,7 +31,6 @@
 class_name CanvasPlane
 extends Node3D
 
-
 const function_pointer_receiver_const = preload("function_pointer_receiver.gd")
 
 @export_range(0.0, 1.0) var canvas_anchor_x: float = 0.0:
@@ -82,7 +81,9 @@ func get_spatial_origin_to_canvas_position(p_origin: Vector3) -> Vector2:
 	var inverse_transform: Vector2 = Vector2(1.0, 1.0) / transform_scale
 	var point: Vector2 = Vector2(p_origin.x, p_origin.y) * inverse_transform * inverse_transform
 
-	var ratio: Vector2 = Vector2(0.5, 0.5) + (point / canvas_scale) / ((Vector2(canvas_width, canvas_height) * canvas_scale) * 0.5)
+	var ratio: Vector2 = (
+		Vector2(0.5, 0.5) + (point / canvas_scale) / ((Vector2(canvas_width, canvas_height) * canvas_scale) * 0.5)
+	)
 	ratio.y = 1.0 - ratio.y  # Flip the Y-axis
 
 	var canvas_position: Vector2 = ratio * Vector2(canvas_width, canvas_height)
