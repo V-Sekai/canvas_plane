@@ -180,7 +180,7 @@ func on_pointer_pressed(p_position: Vector3, p_doubleclick: bool) -> void:
 	# Let's mimic a mouse
 	mouse_mask = 1
 	var event: InputEventMouseButton = InputEventMouseButton.new()
-	event.set_button_index(1)
+	event.set_button_index(MouseButton.MOUSE_BUTTON_LEFT)
 	event.set_pressed(true)
 	event.set_position(position_2d)
 	event.set_global_position(position_2d)
@@ -198,7 +198,7 @@ func on_pointer_release(p_position: Vector3) -> void:
 	# Let's mimic a mouse
 	mouse_mask = 0
 	var event: InputEventMouseButton = InputEventMouseButton.new()
-	event.set_button_index(1)
+	event.set_button_index(MOUSE_BUTTON_LEFT)
 	event.set_pressed(false)
 	event.set_position(position_2d)
 	event.set_global_position(position_2d)
