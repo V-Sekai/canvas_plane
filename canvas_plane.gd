@@ -9,6 +9,7 @@ class_name CanvasPlane
 extends Node3D
 
 const function_pointer_receiver_const = preload("function_pointer_receiver.gd")
+const canvas_utils_const = preload("canvas_utils.gd")
 
 @export_range(0.0, 1.0) var canvas_anchor_x: float = 0.0:
 	set = set_canvas_anchor_x
@@ -23,7 +24,7 @@ const function_pointer_receiver_const = preload("function_pointer_receiver.gd")
 @export var canvas_height: float = DisplayServer.window_get_size(0).y:
 	set = set_canvas_height
 
-@export var canvas_scale: float = 0.01:
+@export var canvas_scale: float = canvas_utils_const.UI_PIXELS_TO_METER:
 	set = set_canvas_scale
 
 @export var interactable: bool = false:
@@ -35,6 +36,8 @@ const function_pointer_receiver_const = preload("function_pointer_receiver.gd")
 @export_flags_3d_physics var collision_mask: int = 2
 @export_flags_3d_physics var collision_layer: int = 2
 
+var canvas_size: Vector2
+
 # Render
 var spatial_root: Node3D = null
 var mesh: Mesh = null
@@ -43,6 +46,20 @@ var material: Material = null
 var viewport: SubViewport = null
 var control_root: Control = null
 
+func _update() -> void:
+	var canvas_width_offset: float = canvas_width * 0.5 * (0.5 - canvas_anchor_x)
+	var canvas_height_offset: float = -(canvas_height * 0.5 * (0.5 - canvas_anchor_y))
+
+	if mesh:
+		mesh.set_size(Vector2(canvas_width, canvas_height) * 0.5)
+
+	if mesh_instance:
+		mesh_instance.set_position(Vector3(canvas_width_offset, canvas_height_offset, 0))
+
+	if spatial_root:
+		spatial_root.set_scale(Vector3(canvas_scale, canvas_scale, canvas_scale))
+
+'''
 # Collision
 var pointer_receiver: Area3D = null
 var collision_shape: CollisionShape3D = CollisionShape3D.new()
@@ -69,8 +86,8 @@ func global_to_viewport(p_origin: Vector3) -> Vector2:
 
 
 func _update() -> void:
-	var canvas_width_offset: float = (canvas_width * 0.5 * 0.5) - (canvas_width * 0.5 * canvas_anchor_x)
-	var canvas_height_offset: float = -(canvas_height * 0.5 * 0.5) + (canvas_height * 0.5 * canvas_anchor_y)
+	var canvas_width_offset: float = canvas_width * 0.5 * (0.5 - canvas_anchor_x)
+	var canvas_height_offset: float = -(canvas_height * 0.5 * (0.5 - canvas_anchor_y))
 
 	if mesh:
 		mesh.set_size(Vector2(canvas_width, canvas_height) * 0.5)
@@ -107,6 +124,7 @@ func _update() -> void:
 	if spatial_root:
 		spatial_root.set_scale(Vector3(canvas_scale, canvas_scale, canvas_scale))
 
+'''
 
 func get_control_root() -> Control:
 	return control_root
@@ -159,6 +177,7 @@ func _set_mesh_material(p_material: Material) -> void:
 		else:
 			mesh.surface_set_material(0, p_material)
 
+'''
 
 func on_pointer_moved(from: Vector3, to: Vector3):
 	var local_from: Vector2 = global_to_viewport(from)
@@ -210,6 +229,8 @@ func on_pointer_release(at: Vector3, p_doubleclick: bool):
 	previous_mouse_position = local_at
 
 
+'''
+
 func _process(_delta: float) -> void:
 	_update()
 	set_process(false)
@@ -225,7 +246,8 @@ func _setup_viewport() -> void:
 	spatial_root.set_name("SpatialRoot")
 	add_child(spatial_root, true)
 
-	viewport.size = Vector2(canvas_width, canvas_height)
+	canvas_size = Vector2(canvas_width, canvas_height)
+	viewport.size = canvas_size
 	# viewport.hdr = false
 	viewport.transparent_bg = true
 	# viewport.disable_3d = true
@@ -280,3 +302,10 @@ func _ready() -> void:
 
 	_update()
 	_set_mesh_material(material)
+
+	var vp := get_viewport()
+	if vp != null:
+		if vp.get(&"interaction_manager") != null:
+			vp.get(&"interaction_manager").register_canvas(self)
+		elif vp.has_meta(&"interaction_manager"):
+			vp.get_meta(&"interaction_manager").register_canvas(self)
